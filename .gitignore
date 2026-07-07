@@ -1,0 +1,9 @@
+# Environment secret file
+.env
+
+# Dynamic uploads folder content
+/uploads/*
+!/uploads/.gitkeep
+!/uploads/logo.png
+!/uploads/hero.jpg
+!/uploads/design_*

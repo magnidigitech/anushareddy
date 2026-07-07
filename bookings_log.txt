@@ -1,0 +1,20 @@
+--- BOOKING REQUEST (2026-07-07 11:02:07) ---
+Name: Cenikala BaswanthVignesh
+Email: baswanthvignesh448@gmail.com
+Phone: 08500878380
+Type: Virtual Video Call
+Preferred Date: 2026-07-15
+Inquired Design: gulnar
+Message: test 13
+---------------------------------------------
+
+--- BOOKING REQUEST (2026-07-07 12:13:04) ---
+Name: Baswanth Vignesh
+Email: baswanthvignesh448@gmail.com
+Phone: +918184974588
+Type: Studio Appointment
+Preferred Date: 2026-08-06
+Inquired Design: afsd
+Message: test25
+---------------------------------------------
+
