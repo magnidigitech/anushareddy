@@ -1,11 +1,31 @@
 <?php
 include 'header.php';
 include 'data/products.php';
+
+$selected_category = isset($_GET['category']) ? trim($_GET['category']) : 'All';
+
+if ($selected_category !== 'All') {
+    $filtered_products = [];
+    foreach ($products as $id => $product) {
+        $prod_categories = array_map('trim', explode(',', $product['category'] ?? ''));
+        $match = false;
+        foreach ($prod_categories as $cat) {
+            if (strcasecmp($cat, $selected_category) === 0) {
+                $match = true;
+                break;
+            }
+        }
+        if ($match) {
+            $filtered_products[$id] = $product;
+        }
+    }
+    $products = $filtered_products;
+}
 ?>
 
 <section class="section container-fluid">
     <p class="section-subtitle">Our Catalog</p>
-    <h1 class="section-title">Our Products</h1>
+    <h1 class="section-title"><?php echo ($selected_category !== 'All') ? htmlspecialchars($selected_category) : 'Our Products'; ?></h1>
     
     <!-- Premium Interactive Search -->
     <div class="search-container">

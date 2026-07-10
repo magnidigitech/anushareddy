@@ -376,3 +376,96 @@ function save_homepage_settings($settings) {
     $file = __DIR__ . '/homepage_settings.json';
     return (file_put_contents($file, json_encode($settings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)) !== false);
 }
+
+/**
+ * Fetch all categories from PostgreSQL or fallback to local JSON database.
+ */
+function db_get_categories() {
+    $pdo = get_db_connection();
+    if ($pdo) {
+        try {
+            // Check if table exists, if not create it
+            $pdo->exec("CREATE TABLE IF NOT EXISTS categories (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                parent VARCHAR(255)
+            )");
+            
+            $stmt = $pdo->query("SELECT * FROM categories ORDER BY id ASC");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (!empty($rows)) {
+                $categories = [];
+                foreach ($rows as $row) {
+                    $categories[] = [
+                        'id' => intval($row['id']),
+                        'name' => $row['name'],
+                        'parent' => $row['parent']
+                    ];
+                }
+                return $categories;
+            }
+        } catch (PDOException $e) {
+            error_log("Get categories failed, falling back: " . $e->getMessage());
+        }
+    }
+    
+    // Fallback to local JSON database
+    $json_file = __DIR__ . '/categories.json';
+    if (file_exists($json_file)) {
+        $json_content = file_get_contents($json_file);
+        $decoded = json_decode($json_content, true);
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+    }
+    return [];
+}
+
+/**
+ * Save categories back to the local categories.json file.
+ */
+function save_local_categories_list($categories_array) {
+    $json_file = __DIR__ . '/categories.json';
+    return (file_put_contents($json_file, json_encode($categories_array, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false);
+}
+
+/**
+ * Create a category in PostgreSQL database.
+ */
+function db_create_category($category_data) {
+    $pdo = get_db_connection();
+    if (!$pdo) {
+        return false;
+    }
+    
+    try {
+        $sql = "INSERT INTO categories (id, name, parent) VALUES (:id, :name, :parent)";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            ':id' => intval($category_data['id']),
+            ':name' => $category_data['name'],
+            ':parent' => $category_data['parent']
+        ]);
+    } catch (PDOException $e) {
+        error_log("Create category failed: " . $e->getMessage());
+        return false;
+    }
+}
+
+/**
+ * Delete a category in PostgreSQL database.
+ */
+function db_delete_category($id) {
+    $pdo = get_db_connection();
+    if (!$pdo) {
+        return false;
+    }
+    
+    try {
+        $stmt = $pdo->prepare("DELETE FROM categories WHERE id = :id");
+        return $stmt->execute([':id' => intval($id)]);
+    } catch (PDOException $e) {
+        error_log("Delete category failed: " . $e->getMessage());
+        return false;
+    }
+}

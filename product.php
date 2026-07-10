@@ -74,21 +74,55 @@ $whatsapp_message = rawurlencode("Hello Anusha Reddy Couture, I am interested in
                 </p>
             </div>
 
+            <?php
+            // Parse structured details dynamically
+            $structured_details = [
+                'Fabric' => 'Not Specified',
+                'Color' => 'Not Specified',
+                'Embellishments' => 'Not Specified',
+                'Border & Pallu details' => 'Not Specified',
+                'Blouse details' => 'Not Specified',
+                'Feel' => 'Not Specified',
+                'Occasion' => 'Not Specified',
+                'Care Instructions' => 'Dry clean only'
+            ];
+
+            if (isset($product['details']) && is_array($product['details'])) {
+                foreach ($product['details'] as $detail) {
+                    $parts = explode(':', $detail, 2);
+                    if (count($parts) === 2) {
+                        $key = trim($parts[0]);
+                        $val = trim($parts[1]);
+                        
+                        if (strcasecmp($key, 'Fabric') === 0) $structured_details['Fabric'] = $val;
+                        elseif (strcasecmp($key, 'Color') === 0) $structured_details['Color'] = $val;
+                        elseif (strcasecmp($key, 'Embellishments') === 0 || strcasecmp($key, 'Embroidery') === 0) $structured_details['Embellishments'] = $val;
+                        elseif (strcasecmp($key, 'Border & Pallu details') === 0 || strcasecmp($key, 'Border & Pallu') === 0 || strcasecmp($key, 'Border') === 0) $structured_details['Border & Pallu details'] = $val;
+                        elseif (strcasecmp($key, 'Blouse details') === 0 || strcasecmp($key, 'Blouse') === 0) $structured_details['Blouse details'] = $val;
+                        elseif (strcasecmp($key, 'Feel') === 0) $structured_details['Feel'] = $val;
+                        elseif (strcasecmp($key, 'Occasion') === 0) $structured_details['Occasion'] = $val;
+                        elseif (strcasecmp($key, 'Care Instructions') === 0 || strcasecmp($key, 'Care') === 0) $structured_details['Care Instructions'] = $val;
+                    }
+                }
+            }
+            ?>
+
             <!-- Collapsible Premium Accordions Group -->
             <div class="product-accordions-group">
                 <!-- 1. PRODUCT DETAILS ACCORDION -->
                 <details class="product-accordion" open>
-                    <summary>Product Details</summary>
-                    <div class="accordion-content">
-                        <?php if (isset($product['details']) && is_array($product['details'])): ?>
-                            <ul>
-                                <?php foreach ($product['details'] as $detail): ?>
-                                    <li><?php echo htmlspecialchars($detail); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php else: ?>
-                            <p>No specifications are currently available for this dress.</p>
-                        <?php endif; ?>
+                    <summary>Couture Specifications</summary>
+                    <div class="accordion-content" style="padding-bottom: 1.5rem;">
+                        <div class="couture-specs-grid">
+                            <?php foreach ($structured_details as $label => $value): ?>
+                                <?php if ($value !== 'Not Specified'): ?>
+                                    <div class="spec-card">
+                                        <span class="spec-label"><?php echo htmlspecialchars($label); ?></span>
+                                        <span class="spec-value"><?php echo htmlspecialchars($value); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </details>
 
@@ -126,7 +160,7 @@ $whatsapp_message = rawurlencode("Hello Anusha Reddy Couture, I am interested in
                 </a>
                 
                 <!-- Studio Booking Button (Custom Fitting / Trial) -->
-                <a href="contact.php?product=<?php echo $product_id; ?>" class="btn btn-outline btn-full">
+                <a href="contact.php?product=<?php echo $product_id; ?>" class="btn btn-maroon btn-full">
                     Book a Fitting
                 </a>
             </div>

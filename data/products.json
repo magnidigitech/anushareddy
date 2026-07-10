@@ -2,9 +2,9 @@
     "1": {
         "id": 1,
         "name": "The Gulnar Lehenga",
-        "category": "Bridal",
+        "category": "Women, Lehengas, Raas - Spring Summer '26, Collections",
         "price_numeric": 142500,
-        "price": "\u20b9142,500",
+        "price": "₹142,500",
         "original_price_numeric": 142500,
         "images": [
             "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=800",
@@ -15,36 +15,44 @@
         ],
         "description": "A traditional crimson raw silk lehenga, hand-embroidered with classic zardozi, gold threadwork, and delicate pearls. Paired with a heavily embellished blouse and a sheer tissue dupatta.",
         "details": [
-            "Fabric: Raw Silk, Net & Organza",
-            "Embroidery: Hand-done Zardozi, Aari and Pearl accents",
-            "Delivery Time: 8 to 12 weeks",
-            "Fit: Custom fitted to measurements"
+            "Fabric: Crimson Raw Silk, Net & Organza",
+            "Color: Classic Wedding Crimson Red & Dull Gold",
+            "Embellishments: Hand-done Zardozi, Aari, and Pearl accents",
+            "Border & Pallu details: Heavy floral borders with gold threadwork",
+            "Blouse details: Sweetheart neckline, heavily embellished blouse",
+            "Feel: Royal, heavy, traditional couture",
+            "Occasion: Bridal / Wedding Ceremony",
+            "Care Instructions: Dry clean only, store in muslin cover"
         ]
     },
     "2": {
         "id": 2,
         "name": "The Ivory Noor Anarkali",
-        "category": "Festive",
+        "category": "Women, Anarkalis, Becoming Love - Festive '25, Collections",
         "price_numeric": 145000,
-        "price": "\u20b9145,000",
+        "price": "₹145,000",
         "original_price_numeric": 145000,
         "images": [
             "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&q=80&w=800"
         ],
         "description": "An ethereal ivory georgette Anarkali gown featuring fine Lucknowi chikankari embroidery, paired with a sheer organza dupatta highlighted with badla work.",
         "details": [
-            "Fabric: Georgette & Organza",
-            "Embroidery: Hand-embroidered Chikankari & Badla work",
-            "Delivery Time: 6 to 8 weeks",
-            "Fit: Tailored to standard sizes or custom measurement"
+            "Fabric: Premium Georgette & Sheer Organza",
+            "Color: Ethereal Ivory & Soft Champagne Gold",
+            "Embellishments: Hand-embroidered Lucknowi Chikankari & Badla work",
+            "Border & Pallu details: Gota patti borders with badla highlighted dupatta",
+            "Blouse details: Fitted full-length lining, sheer sleeves with embroidered cuffs",
+            "Feel: Light, ethereal, and graceful drape",
+            "Occasion: Festive Wear, Reception & Sangeet",
+            "Care Instructions: Dry clean only, keep away from moisture"
         ]
     },
     "3": {
         "id": 3,
         "name": "Meera Velvet Kaftan",
-        "category": "Pret",
+        "category": "Women, Kaftans, Phalgun- Spring Summer '25, Collections",
         "price_numeric": 75000,
-        "price": "\u20b975,000",
+        "price": "₹75,000",
         "original_price_numeric": 75000,
         "images": [
             "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&q=80&w=800"
@@ -52,71 +60,87 @@
         "description": "Luxurious royal emerald velvet kaftan, detailed with delicate tilla embroidery along the neckline and sleeves. Flowy silhouette suitable for festive hosting.",
         "details": [
             "Fabric: Premium Silk Velvet",
-            "Embroidery: Fine metallic Tilla work",
-            "Delivery Time: 3 to 4 weeks",
-            "Fit: Relaxed free-size drape"
+            "Color: Royal Emerald Green",
+            "Embellishments: Fine metallic Tilla embroidery along the neckline",
+            "Border & Pallu details: Minimal tilla border on sleeves and side slits",
+            "Blouse details: Loose kaftan design (no separate blouse)",
+            "Feel: Luxurious, soft, warm and rich silhouette",
+            "Occasion: Festive Hosting, Mehendi, Dinner parties",
+            "Care Instructions: Professional dry clean only"
         ]
     },
     "4": {
         "id": 4,
         "name": "The Seerat Sharara Set",
-        "category": "Bridal",
+        "category": "Women, Capes & Indo-Western, Amrita - Festive '24, Collections",
         "price_numeric": 195000,
-        "price": "\u20b9195,000",
+        "price": "₹195,000",
         "original_price_numeric": 195000,
         "images": [
             "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=800"
         ],
         "description": "A modern blush pink georgette sharara set adorned with floral sequins, silver gota patti, and fine thread border details.",
         "details": [
-            "Fabric: Silk Georgette & Crepe",
-            "Embroidery: Gota Patti & Sequins",
-            "Delivery Time: 8 weeks",
-            "Fit: Custom sizing available"
+            "Fabric: Silk Georgette & Crepe lining",
+            "Color: Delicate Blush Pink",
+            "Embellishments: Floral sequins, silver Gota Patti and fine threadwork",
+            "Border & Pallu details: Gota patti border along the georgette dupatta",
+            "Blouse details: Sleeveless short kurti with heavy sequins detailing",
+            "Feel: Modern, lightweight, fluid silhouette",
+            "Occasion: Sangeet, Mehendi, Engagement",
+            "Care Instructions: Dry clean only, iron on reverse low heat"
         ]
     },
     "5": {
         "id": 5,
         "name": "The Zara Silk Saree",
-        "category": "Festive",
+        "category": "Women, Sarees, Nargis- Festive '24, Collections",
         "price_numeric": 115000,
-        "price": "\u20b9115,000",
+        "price": "₹115,000",
         "original_price_numeric": 115000,
         "images": [
             "https://images.unsplash.com/photo-1610030469668-93535c17b6b3?auto=format&fit=crop&q=80&w=800"
         ],
         "description": "A timeless handwoven Banarasi silk saree in midnight blue, featuring intricate gold zari borders and heavy pallu detail. Includes unstitched blouse piece.",
         "details": [
-            "Fabric: 100% pure Banarasi Silk",
-            "Weave: Traditional Kadhwa weave",
-            "Delivery Time: 2 to 3 weeks",
-            "Fit: Unstitched (Blouse tailoring optional)"
+            "Fabric: 100% Pure Banarasi Silk",
+            "Color: Midnight Blue & Antique Zari Gold",
+            "Embellishments: Intricate traditional Kadhwa gold weave",
+            "Border & Pallu details: Heavy gold zari borders and rich pallu design",
+            "Blouse details: Unstitched midnight blue blouse piece with border",
+            "Feel: Structured, classic, and extremely premium drape",
+            "Occasion: Weddings, Festive Celebrations",
+            "Care Instructions: Dry clean only, cold iron"
         ]
     },
     "6": {
         "id": 6,
         "name": "Gulabi Organza Cape",
-        "category": "Pret",
+        "category": "Women, Capes & Indo-Western, Cosmos - Spring Festive '23, Collections",
         "price_numeric": 55000,
-        "price": "\u20b955,000",
+        "price": "₹55,000",
         "original_price_numeric": 55000,
         "images": [
             "https://images.unsplash.com/photo-1549064482-6779ba3292fe?auto=format&fit=crop&q=80&w=800"
         ],
         "description": "A contemporary organza cape draped set in pastel rose, finished with minimal pearl borders and floral printed inner straight pants.",
         "details": [
-            "Fabric: Silk Organza & Satin",
-            "Embroidery: Hand-sewn Pearls",
-            "Delivery Time: 3 weeks",
-            "Fit: Comfort straight fit"
+            "Fabric: Silk Organza, Georgette & Satin lining",
+            "Color: Pastel Rose Pink",
+            "Embellishments: Hand-sewn pearls along borders",
+            "Border & Pallu details: Scalloped pearl border detailing on the cape",
+            "Blouse details: Fitted printed inner crop top",
+            "Feel: Modern, comfortable, airy, and contemporary",
+            "Occasion: Pret-A-Porter, High Tea, Festive brunches",
+            "Care Instructions: Dry clean only"
         ]
     },
     "7": {
         "id": 7,
         "name": "test",
-        "category": "Bridal",
+        "category": "Women, We, the People- Festive '23, Collections",
         "price_numeric": 20000,
-        "price": "\u20b920,000",
+        "price": "₹20,000",
         "original_price_numeric": 20000,
         "images": [
             "uploads/design_6a4a4649290596.90333828.jpeg",
@@ -126,6 +150,15 @@
             "uploads/design_6a4a4649293216.36644481.jpeg"
         ],
         "description": "xzkjahjkaa",
-        "details": []
+        "details": [
+            "Fabric: Pure Raw Silk",
+            "Color: Rich Gold",
+            "Embellishments: Hand embroidery",
+            "Border & Pallu details: Gold thread border",
+            "Blouse details: Embroidered raw silk blouse",
+            "Feel: Heavy, traditional",
+            "Occasion: Bridal",
+            "Care Instructions: Dry clean only"
+        ]
     }
 }

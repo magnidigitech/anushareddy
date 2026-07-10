@@ -40,7 +40,9 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // A. ADD PRODUCT
     if ($action === 'add') {
         $name = strip_tags(trim($_POST['name'] ?? ''));
-        $category = strip_tags(trim($_POST['category'] ?? 'Couture'));
+        $category_array = $_POST['categories'] ?? [];
+        $category = implode(', ', array_map('strip_tags', array_map('trim', $category_array)));
+        if (empty($category)) $category = 'Couture';
         $price_numeric = intval($_POST['price_numeric'] ?? 0);
         $description = strip_tags(trim($_POST['description'] ?? ''));
         $details_raw = strip_tags(trim($_POST['details'] ?? ''));
@@ -120,7 +122,9 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = $_POST['id'] ?? '';
         if (isset($products[$id])) {
             $name = strip_tags(trim($_POST['name'] ?? ''));
-            $category = strip_tags(trim($_POST['category'] ?? 'Couture'));
+            $category_array = $_POST['categories'] ?? [];
+            $category = implode(', ', array_map('strip_tags', array_map('trim', $category_array)));
+            if (empty($category)) $category = 'Couture';
             $price_numeric = intval($_POST['price_numeric'] ?? 0);
             $description = strip_tags(trim($_POST['description'] ?? ''));
             $details_raw = strip_tags(trim($_POST['details'] ?? ''));
@@ -454,6 +458,63 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // L. ADD CATEGORY
+    if ($action === 'add_category') {
+        $cat_name = strip_tags(trim($_POST['cat_name'] ?? ''));
+        $cat_parent = $_POST['cat_parent'] ?? '';
+        if (empty($cat_parent)) $cat_parent = null;
+        
+        if (!empty($cat_name)) {
+            $categories = db_get_categories();
+            $new_id = empty($categories) ? 1 : max(array_column($categories, 'id')) + 1;
+            $new_cat = [
+                'id' => $new_id,
+                'name' => $cat_name,
+                'parent' => $cat_parent
+            ];
+            $categories[] = $new_cat;
+            db_create_category($new_cat);
+            if (save_local_categories_list($categories)) {
+                $alert_message = "Category added successfully!";
+                $alert_type = 'success';
+            } else {
+                $alert_message = "Failed to save category locally.";
+                $alert_type = 'error';
+            }
+        } else {
+            $alert_message = "Category name cannot be empty.";
+            $alert_type = 'error';
+        }
+    }
+
+    // M. DELETE CATEGORY
+    if ($action === 'delete_category') {
+        $cat_id = intval($_POST['cat_id'] ?? 0);
+        $categories = db_get_categories();
+        $updated_categories = [];
+        $found = false;
+        foreach ($categories as $cat) {
+            if (intval($cat['id']) === $cat_id) {
+                $found = true;
+                db_delete_category($cat_id);
+            } else {
+                $updated_categories[] = $cat;
+            }
+        }
+        if ($found) {
+            if (save_local_categories_list($updated_categories)) {
+                $alert_message = "Category deleted successfully.";
+                $alert_type = 'success';
+            } else {
+                $alert_message = "Failed to update category list locally.";
+                $alert_type = 'error';
+            }
+        } else {
+            $alert_message = "Category not found.";
+            $alert_type = 'error';
+        }
+    }
+
     if (isset($_POST['ajax'])) {
         header('Content-Type: application/json');
         echo json_encode([
@@ -618,6 +679,7 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <?php
+        $categories_list = db_get_categories();
         $edit_id = isset($_GET['edit']) ? $_GET['edit'] : '';
         $edit_product = null;
         if (!empty($edit_id) && isset($products[$edit_id])) {
@@ -629,6 +691,7 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="tabs">
             <button class="tab-btn <?php echo !$edit_product ? 'active' : ''; ?>" onclick="switchTab('manage-products', this)">Manage Products</button>
             <button class="tab-btn" onclick="switchTab('add-product', this)">Add New Design</button>
+            <button class="tab-btn" onclick="switchTab('manage-categories', this)">Manage Categories</button>
             <button class="tab-btn" onclick="switchTab('sales-manager', this)">Bulk Sales Engine</button>
             <button class="tab-btn" onclick="switchTab('celebrity-manager', this)">Celebrity Showcase</button>
             <button class="tab-btn" onclick="switchTab('homepage-settings', this)">Home &amp; Story Settings</button>
@@ -708,13 +771,33 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" id="new_name" name="name" class="form-control" placeholder="e.g. Silk Organza Lehenga" required>
                     </div>
                     <div>
-                        <label for="new_category">Category</label>
-                        <select id="new_category" name="category" class="form-control">
-                            <option value="Bridal">Bridal Wear</option>
-                            <option value="Festive">Festive Collection</option>
-                            <option value="Pret">Pret-A-Porter (Ready to Wear)</option>
-                            <option value="Bespoke">Bespoke Couture</option>
-                        </select>
+                        <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Product Categories</label>
+                        <div class="category-checklist-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 0.8rem; border: 1px solid var(--border-color); background-color: var(--bg-primary); max-height: 200px; overflow-y: auto; box-sizing: border-box;">
+                            <?php
+                            $parent_cats = [];
+                            $sub_cats = [];
+                            foreach ($categories_list as $cat) {
+                                if ($cat['parent'] === null || $cat['parent'] === '') {
+                                    $parent_cats[] = $cat;
+                                } else {
+                                    $sub_cats[$cat['parent']][] = $cat;
+                                }
+                            }
+                            
+                            foreach ($parent_cats as $parent) {
+                                echo '<div style="margin-bottom: 0.6rem;">';
+                                echo '<label style="font-weight: 600; display: block; margin-bottom: 0.2rem;"><input type="checkbox" name="categories[]" value="' . htmlspecialchars($parent['name']) . '"> ' . htmlspecialchars($parent['name']) . '</label>';
+                                if (isset($sub_cats[$parent['name']])) {
+                                    echo '<div style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.2rem;">';
+                                    foreach ($sub_cats[$parent['name']] as $sub) {
+                                        echo '<label style="font-size: 0.85rem; font-weight: 400;"><input type="checkbox" name="categories[]" value="' . htmlspecialchars($sub['name']) . '"> ' . htmlspecialchars($sub['name']) . '</label>';
+                                    }
+                                    echo '</div>';
+                                }
+                                echo '</div>';
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
 
@@ -738,6 +821,7 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="new_description">Product Description</label>
                     <textarea id="new_description" name="description" class="form-control" style="min-height: 80px;" placeholder="Enter details about materials, design elements, fit, and origin."></textarea>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">💡 Tip: To link this product to a celebrity showcase card, mention their name in the description or details (e.g., "Worn by Kareena Kapoor").</p>
                 </div>
 
                 <div class="form-group">
@@ -766,13 +850,37 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" id="edit_name" name="name" class="form-control" value="<?php echo htmlspecialchars($edit_product['name']); ?>" required>
                     </div>
                     <div>
-                        <label for="edit_category">Category</label>
-                        <select id="edit_category" name="category" class="form-control">
-                            <option value="Bridal" <?php echo ($edit_product['category'] === 'Bridal') ? 'selected' : ''; ?>>Bridal Wear</option>
-                            <option value="Festive" <?php echo ($edit_product['category'] === 'Festive') ? 'selected' : ''; ?>>Festive Collection</option>
-                            <option value="Pret" <?php echo ($edit_product['category'] === 'Pret') ? 'selected' : ''; ?>>Pret-A-Porter (Ready to Wear)</option>
-                            <option value="Bespoke" <?php echo ($edit_product['category'] === 'Bespoke') ? 'selected' : ''; ?>>Bespoke Couture</option>
-                        </select>
+                        <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Product Categories</label>
+                        <div class="category-checklist-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 0.8rem; border: 1px solid var(--border-color); background-color: var(--bg-primary); max-height: 200px; overflow-y: auto; box-sizing: border-box;">
+                            <?php
+                            $prod_cats = array_map('trim', explode(',', $edit_product['category'] ?? ''));
+                            
+                            $parent_cats = [];
+                            $sub_cats = [];
+                            foreach ($categories_list as $cat) {
+                                if ($cat['parent'] === null || $cat['parent'] === '') {
+                                    $parent_cats[] = $cat;
+                                } else {
+                                    $sub_cats[$cat['parent']][] = $cat;
+                                }
+                            }
+                            
+                            foreach ($parent_cats as $parent) {
+                                $checked = in_array($parent['name'], $prod_cats) ? 'checked' : '';
+                                echo '<div style="margin-bottom: 0.6rem;">';
+                                echo '<label style="font-weight: 600; display: block; margin-bottom: 0.2rem;"><input type="checkbox" name="categories[]" value="' . htmlspecialchars($parent['name']) . '" ' . $checked . '> ' . htmlspecialchars($parent['name']) . '</label>';
+                                if (isset($sub_cats[$parent['name']])) {
+                                    echo '<div style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.2rem;">';
+                                    foreach ($sub_cats[$parent['name']] as $sub) {
+                                        $sub_checked = in_array($sub['name'], $prod_cats) ? 'checked' : '';
+                                        echo '<label style="font-size: 0.85rem; font-weight: 400;"><input type="checkbox" name="categories[]" value="' . htmlspecialchars($sub['name']) . '" ' . $sub_checked . '> ' . htmlspecialchars($sub['name']) . '</label>';
+                                    }
+                                    echo '</div>';
+                                }
+                                echo '</div>';
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
 
@@ -808,6 +916,7 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="edit_description">Product Description</label>
                     <textarea id="edit_description" name="description" class="form-control" style="min-height: 80px;"><?php echo htmlspecialchars($edit_product['description'] ?? ''); ?></textarea>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">💡 Tip: To link this product to a celebrity showcase card, mention their name in the description or details (e.g., "Worn by Kareena Kapoor").</p>
                 </div>
 
                 <div class="form-group">
@@ -1035,6 +1144,74 @@ if ($is_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <button type="submit" class="btn btn-solid" style="height: 46px; padding: 0 1.5rem; white-space: nowrap;"><i class="fas fa-plus"></i> Add to Gallery</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- TAB 6: MANAGE CATEGORIES -->
+        <div id="manage-categories" class="tab-content">
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Manage Product Categories</h2>
+            <p style="margin-bottom: 2rem;">Add new navigation categories or delete existing ones. Parent categories will show as top-level menu items; subcategories will nested under them.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; align-items: start;">
+                <!-- Add Category Form -->
+                <form action="admin.php" method="POST" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem;">
+                    <input type="hidden" name="action" value="add_category">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-sans); font-weight: 500; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--accent-gold);">Add New Category</h3>
+                    
+                    <div class="form-group">
+                        <label for="cat_name">Category Name</label>
+                        <input type="text" id="cat_name" name="cat_name" class="form-control" placeholder="e.g. Kaftans, Accessories" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cat_parent">Parent Category (Optional)</label>
+                        <select id="cat_parent" name="cat_parent" class="form-control">
+                            <option value="">-- None (Top-Level Category) --</option>
+                            <?php foreach ($categories_list as $cat): ?>
+                                <?php if ($cat['parent'] === null || $cat['parent'] === ''): ?>
+                                    <option value="<?php echo htmlspecialchars($cat['name']); ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-solid btn-full" style="padding: 0.8rem;">Add Category</button>
+                </form>
+                
+                <!-- Categories List / Table -->
+                <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem; max-height: 500px; overflow-y: auto;">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 1rem; font-family: var(--font-sans); font-weight: 500; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: #111;">Current Categories</h3>
+                    <table class="admin-table" style="margin-top: 0;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Hierarchy / Parent</th>
+                                <th style="width: 100px; text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($categories_list as $cat): ?>
+                                <tr>
+                                    <td style="font-weight: 600;"><?php echo htmlspecialchars($cat['name']); ?></td>
+                                    <td>
+                                        <?php if ($cat['parent'] !== null && $cat['parent'] !== ''): ?>
+                                            <span style="font-size: 0.75rem; color: var(--accent-gold); text-transform: uppercase;">Sub of <?php echo htmlspecialchars($cat['parent']); ?></span>
+                                        <?php else: ?>
+                                            <span style="font-size: 0.75rem; color: #555; text-transform: uppercase; font-weight: bold;">Top-Level</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <form action="admin.php" method="POST" class="confirm-action-form" data-confirm-title="Delete Category" data-confirm-msg="Are you sure you want to delete this category? Any items assigned to it will remain, but the category option will be removed." data-confirm-btn="Delete" data-cancel-btn="Cancel">
+                                            <input type="hidden" name="action" value="delete_category">
+                                            <input type="hidden" name="cat_id" value="<?php echo $cat['id']; ?>">
+                                            <button type="submit" style="background: none; border: none; color: #D32F2F; cursor: pointer; font-size: 0.95rem;" title="Delete Category"><i class="fas fa-trash-alt"></i> Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 

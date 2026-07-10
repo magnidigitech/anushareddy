@@ -1,0 +1,117 @@
+[
+    {
+        "id": 1,
+        "name": "Women",
+        "parent": null
+    },
+    {
+        "id": 2,
+        "name": "Men",
+        "parent": null
+    },
+    {
+        "id": 3,
+        "name": "Collections",
+        "parent": null
+    },
+    {
+        "id": 4,
+        "name": "Trending",
+        "parent": null
+    },
+    {
+        "id": 5,
+        "name": "Lehengas",
+        "parent": "Women"
+    },
+    {
+        "id": 6,
+        "name": "Sarees",
+        "parent": "Women"
+    },
+    {
+        "id": 7,
+        "name": "Anarkalis",
+        "parent": "Women"
+    },
+    {
+        "id": 8,
+        "name": "Kaftans",
+        "parent": "Women"
+    },
+    {
+        "id": 9,
+        "name": "Capes & Indo-Western",
+        "parent": "Women"
+    },
+    {
+        "id": 10,
+        "name": "Sherwanis",
+        "parent": "Men"
+    },
+    {
+        "id": 11,
+        "name": "Kurta Pyjamas",
+        "parent": "Men"
+    },
+    {
+        "id": 12,
+        "name": "Raas - Spring Summer '26",
+        "parent": "Collections"
+    },
+    {
+        "id": 13,
+        "name": "Becoming Love - Festive '25",
+        "parent": "Collections"
+    },
+    {
+        "id": 14,
+        "name": "Phalgun- Spring Summer '25",
+        "parent": "Collections"
+    },
+    {
+        "id": 15,
+        "name": "Amrita - Festive '24",
+        "parent": "Collections"
+    },
+    {
+        "id": 16,
+        "name": "New Arrivals",
+        "parent": "Trending"
+    },
+    {
+        "id": 17,
+        "name": "Best Sellers",
+        "parent": "Trending"
+    },
+    {
+        "id": 18,
+        "name": "Nargis- Festive '24",
+        "parent": "Collections"
+    },
+    {
+        "id": 19,
+        "name": "Cosmos - Spring Festive '23",
+        "parent": "Collections"
+    },
+    {
+        "id": 20,
+        "name": "We, the People- Festive '23",
+        "parent": "Collections"
+    },
+    {
+        "id": 21,
+        "name": "kids",
+        "parent": null
+    },
+    {
+        "id": 22,
+        "name": "boys",
+        "parent": "kids"
+    },
+    {
+        "id": 23,
+        "name": "girls",
+        "parent": "kids"
+    }
+]
