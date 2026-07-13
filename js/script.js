@@ -22,6 +22,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 1b. Mobile Accordion Dropdowns Toggles
+    const menuToggleBtns = document.querySelectorAll('.menu-toggle-btn');
+    menuToggleBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const targetId = btn.getAttribute('data-target');
+            const targetMenu = document.getElementById(targetId);
+            if (targetMenu) {
+                targetMenu.classList.toggle('open');
+                btn.classList.toggle('active');
+            }
+        });
+    });
+
     // 2. Client-side Live Search (for Collections Page)
     const searchInput = document.getElementById('searchInput');
     const collectionCards = document.querySelectorAll('.collection-card');
@@ -345,3 +360,10 @@ document.addEventListener('submit', function(e) {
     }
 });
 
+// Toggle Sidebar Filter Accordion
+function toggleSidebarAccordion(header) {
+    const widget = header.closest('.filter-widget');
+    if (widget) {
+        widget.classList.toggle('collapsed');
+    }
+}

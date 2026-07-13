@@ -4,13 +4,14 @@
 
 /* Design Tokens & Custom Properties */
 :root {
-    --bg-primary: #FAF9F6;      /* Luxury Off-White */
+    --bg-primary: #F8F4EB;      /* Warm Cream/Champagne */
     --bg-secondary: #FFFFFF;    /* Pure White */
-    --text-primary: #111111;    /* Deep Charcoal */
-    --text-muted: #555555;      /* Warm Gray for paragraphs */
-    --accent-gold: #C5A880;     /* Muted Gold */
-    --accent-gold-dark: #B2956D;/* Hover Gold */
-    --border-color: #E5E0DA;     /* Subtle divider color */
+    --text-primary: #2C1E16;    /* Deep Espresso */
+    --text-muted: #5A4E46;      /* Lighter Espresso for paragraphs */
+    --accent-gold: #B8860B;     /* Deep Saturated Gold */
+    --accent-gold-dark: #8B6508;/* Darker Gold Hover */
+    --highlight-madder: #822A2B;/* Deep Madder (Maroon) */
+    --border-color: #E6DCD0;     /* Cream tinted border */
     --card-bg: #FFFFFF;
     
     --font-serif: 'Playfair Display', Georgia, serif;
@@ -165,6 +166,18 @@ a {
     border-color: var(--text-primary);
 }
 
+.btn-maroon {
+    background-color: var(--highlight-madder);
+    color: var(--bg-secondary);
+    border-color: var(--highlight-madder);
+}
+
+.btn-maroon:hover {
+    background-color: #611E1F;
+    border-color: #611E1F;
+    color: var(--bg-secondary);
+}
+
 .btn-full {
     display: block;
     width: 100%;
@@ -237,7 +250,7 @@ a {
 }
 
 /* Nav Menu */
-.nav-menu ul {
+.nav-menu > ul {
     list-style: none;
     display: flex;
     gap: 2.5rem;
@@ -252,7 +265,7 @@ a {
     padding: 0.5rem 0;
 }
 
-.nav-menu a::after {
+.nav-menu > ul > li > a::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -263,13 +276,134 @@ a {
     transition: var(--transition-smooth);
 }
 
-.nav-menu a:hover::after,
-.nav-menu a.active::after {
+.nav-menu > ul > li > a:hover::after,
+.nav-menu > ul > li > a.active::after {
     width: 100%;
 }
 
 .nav-menu a.active {
     color: var(--accent-gold);
+}
+
+/* Nav Menu Dropdowns (Desktop defaults) */
+.dropdown-item {
+    position: relative;
+}
+
+.dropdown-header-link, .submenu-header-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.menu-toggle-btn {
+    display: none; /* Hidden on desktop */
+    cursor: pointer;
+    padding: 0.5rem;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-premium);
+    list-style: none;
+    padding: 0.8rem 0;
+    min-width: 220px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.dropdown-menu li {
+    position: relative;
+    padding: 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: var(--transition-smooth);
+}
+
+.dropdown-menu a:hover {
+    color: var(--accent-gold);
+    background-color: var(--bg-primary);
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-premium);
+    list-style: none;
+    padding: 0.8rem 0;
+    min-width: 200px;
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Hover behaviors for Desktop */
+@media (min-width: 769px) {
+    .dropdown-item:hover > .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    
+    .dropdown-submenu:hover > .submenu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+    
+    /* Chevron for desktop Shop trigger hover indicator */
+    .shop-trigger-link::after {
+        content: '\f078';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        font-size: 0.65rem;
+        margin-left: 0.4rem;
+        display: inline-block;
+        transition: transform 0.3s ease;
+        color: var(--text-muted);
+    }
+    .dropdown-item:hover .shop-trigger-link::after {
+        transform: rotate(180deg);
+        color: var(--accent-gold);
+    }
+    
+    /* Indicator for submenus on desktop */
+    .dropdown-submenu > .submenu-header-link > a::after {
+        content: '\f054';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        font-size: 0.6rem;
+        float: right;
+        margin-top: 2px;
+        color: #999;
+    }
 }
 
 /* Header Actions */
@@ -349,7 +483,7 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+    background: transparent;
     z-index: 1;
 }
 
@@ -357,7 +491,9 @@ a {
     position: relative;
     z-index: 2;
     max-width: 800px;
-    padding: 0 var(--spacing-md);
+    padding: 3.5rem var(--spacing-md);
+    background: radial-gradient(circle, rgba(44, 30, 22, 0.65) 0%, rgba(44, 30, 22, 0.2) 70%, transparent 100%);
+    border-radius: 40px;
 }
 
 .hero-subtitle {
@@ -1027,7 +1163,8 @@ textarea.form-control {
         z-index: 999;
         transition: var(--transition-smooth);
         border-top: 1px solid var(--border-color);
-        padding: var(--spacing-lg) var(--spacing-md);
+        padding: 2rem 1.5rem;
+        overflow-y: auto;
     }
     
     .nav-menu.open {
@@ -1036,12 +1173,97 @@ textarea.form-control {
     
     .nav-menu ul {
         flex-direction: column;
-        gap: 2rem;
-        align-items: center;
+        gap: 0;
+        align-items: stretch;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .nav-menu li {
+        width: 100%;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .nav-menu li:last-child {
+        border-bottom: none;
     }
     
     .nav-menu a {
-        font-size: 1.2rem;
+        font-size: 0.95rem;
+        padding: 0.9rem 0;
+        display: block;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+    
+    /* Accordion Dropdown styles on Mobile */
+    .menu-toggle-btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        border-left: 1px solid var(--border-color);
+        color: var(--text-muted);
+    }
+    
+    .dropdown-header-link, .submenu-header-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    
+    .dropdown-menu, .dropdown-submenu .submenu {
+        position: static;
+        width: 100%;
+        background-color: #F4F1ED; /* Accent light grey/beige */
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        display: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: none;
+    }
+    
+    .dropdown-menu.open, .submenu.open {
+        display: block !important;
+    }
+    
+    .dropdown-menu a {
+        font-size: 0.85rem;
+        padding: 0.75rem 1.2rem;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+        color: var(--text-primary);
+        text-transform: uppercase;
+    }
+    
+    .dropdown-submenu {
+        border-bottom: 1px solid rgba(0,0,0,0.03) !important;
+    }
+    
+    .dropdown-submenu:last-child {
+        border-bottom: none !important;
+    }
+    
+    .dropdown-menu .submenu a {
+        font-size: 0.8rem;
+        padding: 0.7rem 2rem;
+        background-color: #EBE7E2; /* Darker nested item background */
+        border-bottom: 1px solid rgba(0,0,0,0.02);
+    }
+    
+    .menu-toggle-btn.active {
+        transform: rotate(180deg);
+        color: var(--accent-gold);
     }
     
     .hero {
@@ -1392,6 +1614,9 @@ textarea.form-control {
     transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     transform: scale(0.9);
     opacity: 0.65;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .celebrity-card.center-focus {
@@ -1647,4 +1872,279 @@ textarea.form-control {
         grid-template-columns: 1fr;
     }
 }
+
+/* Catalog Sidebar & Accordion Styling */
+.catalog-layout {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+    align-items: start;
+}
+
+.catalog-sidebar {
+    width: 320px;
+    flex-shrink: 0;
+}
+
+.catalog-main {
+    flex-grow: 1;
+}
+
+.filter-widget {
+    background-color: #EBE7E2;
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding-bottom: 0.5rem;
+}
+
+.filter-header span {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #111;
+}
+
+.filter-header .accordion-chevron {
+    font-size: 0.85rem;
+    color: #555;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.filter-content {
+    margin-top: 1rem;
+    border-left: 1.5px solid #888;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    max-height: 500px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+}
+
+.filter-content a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: var(--font-sans);
+    letter-spacing: 0.05em;
+    color: #666;
+    transition: color 0.3s ease, font-weight 0.3s ease;
+    font-weight: 400;
+    text-align: left;
+}
+
+.filter-content a:hover {
+    color: var(--accent-gold);
+}
+
+.filter-content a.active {
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+.filter-widget.collapsed .filter-content {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+}
+
+.filter-widget.collapsed .accordion-chevron {
+    transform: rotate(180deg);
+}
+
+@media (max-width: 991px) {
+    .catalog-layout {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .catalog-sidebar {
+        width: 100%;
+    }
+}
+
+/* Bento Grid Product Showcase */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.bento-card {
+    position: relative;
+    height: 380px;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: var(--bg-secondary);
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+    text-decoration: none;
+    box-shadow: var(--shadow-subtle);
+}
+
+.bento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-premium);
+}
+
+.bento-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(44, 30, 22, 0.85) 0%, rgba(44, 30, 22, 0.2) 60%, transparent 100%);
+    z-index: 1;
+    transition: background 0.4s ease;
+}
+
+.bento-card:hover .bento-card-overlay {
+    background: linear-gradient(to top, rgba(44, 30, 22, 0.95) 0%, rgba(44, 30, 22, 0.3) 60%, transparent 100%);
+}
+
+.bento-card-content {
+    position: relative;
+    z-index: 2;
+    color: #FDFBF7;
+}
+
+.bento-tag {
+    font-size: 0.65rem;
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.bento-card h3 {
+    font-size: 1.6rem;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: #FDFBF7;
+}
+
+.bento-link {
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    color: #FDFBF7;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, gap 0.3s ease;
+}
+
+.bento-card:hover .bento-link {
+    opacity: 1;
+    gap: 0.75rem;
+}
+
+.bento-large {
+    grid-column: span 2;
+}
+
+.bento-wide {
+    grid-column: span 3;
+    height: 320px;
+}
+
+.bento-standard {
+    grid-column: span 1;
+}
+
+@media (max-width: 991px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .bento-large {
+        grid-column: span 2;
+    }
+    .bento-wide {
+        grid-column: span 2;
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+    .bento-large, .bento-wide, .bento-standard {
+        grid-column: span 1;
+        height: 320px;
+    }
+}
+
+/* Couture PDP Specifications Grid */
+.couture-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 2.5rem;
+    margin-top: 1.8rem;
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.spec-card {
+    border-left: 2px solid var(--accent-gold);
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.spec-label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent-gold);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.spec-value {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    font-weight: 300;
+}
+
+@media (max-width: 576px) {
+    .couture-specs-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+}
+
 

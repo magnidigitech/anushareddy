@@ -188,7 +188,7 @@ include 'header.php';
                     <textarea id="message" name="message" class="form-control" placeholder="Mention size specifications, occasion date, custom requirements, etc."><?php echo htmlspecialchars($message); ?></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-solid btn-full" style="padding: 1.1rem; font-weight: 500;">Book Appointment</button>
+                <button type="submit" class="btn btn-maroon btn-full" style="padding: 1.1rem; font-weight: 500;">Book Appointment</button>
             </form>
         </div>
     </div>
