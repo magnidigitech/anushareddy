@@ -404,6 +404,24 @@ a {
         margin-top: 2px;
         color: #999;
     }
+
+    .nav-menu {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .logo {
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: center;
+    }
+
+    .header-actions {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+    }
 }
 
 /* Header Actions */

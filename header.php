@@ -150,7 +150,7 @@ if (isset($_GET['category'])) {
                             <li><a href="collections.php?category=Collections" style="font-weight: 500; border-top: 1px solid var(--border-color); margin-top: 0.5rem; padding-top: 0.5rem;">Shop All Collections</a></li>
                         </ul>
                     </li>
-                    <li><a href="contact.php" class="<?php echo ($current_page == 'contact.php') ? 'active' : ''; ?>">Book Fitting</a></li>
+                    <li><a href="story.php" class="<?php echo ($current_page == 'story.php') ? 'active' : ''; ?>">Our Story</a></li>
                 </ul>
             </nav>
             
