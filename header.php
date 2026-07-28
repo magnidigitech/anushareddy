@@ -30,6 +30,33 @@ $current_page = basename($_SERVER['PHP_SELF']);
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1701135914496775');
     fbq('track', 'PageView');
+
+    // Page-specific Event Tracking
+    <?php if ($current_page === 'contact.php'): ?>
+        fbq('track', 'Lead', { content_name: 'Book a Fitting' });
+    <?php elseif ($current_page === 'collections.php'): ?>
+        fbq('track', 'ViewContent', { 
+            content_category: 'Collections',
+            content_name: '<?php echo isset($_GET['category']) ? addslashes($_GET['category']) : 'Shop All'; ?>' 
+        });
+    <?php elseif ($current_page === 'product.php'): 
+        $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        $product_name = 'Unknown Product';
+        if (file_exists(__DIR__ . '/data/products.php')) {
+            include_once __DIR__ . '/data/products.php';
+            if (isset($products[$product_id])) {
+                $product_name = $products[$product_id]['name'];
+            }
+        }
+    ?>
+        fbq('track', 'ViewContent', { 
+            content_type: 'product',
+            content_ids: ['<?php echo $product_id; ?>'],
+            content_name: '<?php echo addslashes($product_name); ?>'
+        });
+    <?php elseif ($current_page === 'story.php'): ?>
+        fbq('track', 'ViewContent', { content_name: 'Our Story' });
+    <?php endif; ?>
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1701135914496775&ev=PageView&noscript=1"
