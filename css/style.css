@@ -319,7 +319,8 @@ a {
     box-shadow: var(--shadow-premium);
     list-style: none;
     padding: 0.8rem 0;
-    min-width: 220px;
+    min-width: 280px;
+    width: max-content;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
@@ -341,6 +342,7 @@ a {
     font-weight: 500;
     color: var(--text-primary);
     transition: var(--transition-smooth);
+    white-space: nowrap;
 }
 
 .dropdown-menu a:hover {
@@ -361,7 +363,8 @@ a {
     box-shadow: var(--shadow-premium);
     list-style: none;
     padding: 0.8rem 0;
-    min-width: 200px;
+    min-width: 240px;
+    width: max-content;
     z-index: 1001;
     opacity: 0;
     visibility: hidden;
