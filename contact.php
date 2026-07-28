@@ -4,13 +4,7 @@ include 'data/products.php';
 // Initialize submission flags and variables
 $errors = [];
 $success = false;
-$name = $email = $phone = $type = $date = $message = $product_name = '';
-
-// Pre-fill product if passed in URL query
-$selected_product_id = isset($_GET['product']) ? intval($_GET['product']) : 0;
-if (isset($products[$selected_product_id])) {
-    $product_name = $products[$selected_product_id]['name'];
-}
+$name = $email = $phone = $message = '';
 
 // Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,39 +12,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = strip_tags(trim($_POST['name'] ?? ''));
     $email = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
     $phone = strip_tags(trim($_POST['phone'] ?? ''));
-    $type = strip_tags(trim($_POST['type'] ?? ''));
-    $date = strip_tags(trim($_POST['date'] ?? ''));
-    $product_name = strip_tags(trim($_POST['product_name'] ?? ''));
     $message = strip_tags(trim($_POST['message'] ?? ''));
 
     // Validate inputs
     if (empty($name)) $errors[] = "Please enter your name.";
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Please enter a valid email address.";
     if (empty($phone)) $errors[] = "Please enter your phone number.";
-    if (empty($date)) $errors[] = "Please select a preferred date.";
 
     if (empty($errors)) {
-        // Save submission details locally so it works without SMTP configured (excellent for local zip & testing)
+        // Save submission details locally
         $booking_data = [
             'timestamp' => date('Y-m-d H:i:s'),
             'name' => $name,
             'email' => $email,
             'phone' => $phone,
-            'consultation_type' => $type,
-            'preferred_date' => $date,
-            'inquired_product' => $product_name,
+            'consultation_type' => 'Contact Inquiry',
+            'preferred_date' => date('Y-m-d'),
+            'inquired_product' => 'General Inquiry',
             'message' => $message
         ];
 
-        // Save to booking file
+        // Save to booking log file
         $file = 'bookings_log.txt';
-        $log_entry = "--- BOOKING REQUEST (" . $booking_data['timestamp'] . ") ---\n" .
+        $log_entry = "--- CONTACT INQUIRY (" . $booking_data['timestamp'] . ") ---\n" .
                      "Name: " . $booking_data['name'] . "\n" .
                      "Email: " . $booking_data['email'] . "\n" .
                      "Phone: " . $booking_data['phone'] . "\n" .
-                     "Type: " . $booking_data['consultation_type'] . "\n" .
-                     "Preferred Date: " . $booking_data['preferred_date'] . "\n" .
-                     "Inquired Design: " . ($booking_data['inquired_product'] ?: 'None') . "\n" .
                      "Message: " . $booking_data['message'] . "\n" .
                      "---------------------------------------------\n\n";
         
@@ -58,139 +45,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Native PHP Mail simulation/attempt
         $to = "contact@anushareddycouture.com";
-        $subject = "Couture Consultation Request: " . $name;
+        $subject = "New Contact Inquiry from " . $name;
         $headers = "From: " . $email . "\r\n" .
                    "Reply-To: " . $email . "\r\n" .
                    "X-Mailer: PHP/" . phpversion();
-        
-        // Attempt to mail (suppressing error if mail host is not configured)
         @mail($to, $subject, $log_entry, $headers);
 
         // Submit to PostgreSQL database table
         db_create_booking($booking_data);
 
         // Format details into a structured WhatsApp message
-        $whatsapp_text = "*New Couture Fitting Request*\n\n" .
+        $whatsapp_text = "*New Contact Inquiry*\n\n" .
                          "*Name:* " . $name . "\n" .
                          "*Email:* " . $email . "\n" .
                          "*Phone:* " . $phone . "\n" .
-                         "*Appointment Type:* " . $type . "\n" .
-                         "*Preferred Date:* " . $date . "\n" .
-                         "*Inquired Design:* " . ($product_name ? $product_name : 'None') . "\n" .
                          "*Message:* " . ($message ? $message : 'None');
 
         // Redirect to Thank You page first to ensure Meta tracking triggers
         $whatsapp_url = "https://wa.me/917702137501?text=" . rawurlencode($whatsapp_text);
         header("Location: thank-you.php?whatsapp=" . urlencode($whatsapp_url));
         exit;
-
-        $success = true;
-        // Reset form fields on success
-        $name = $email = $phone = $type = $date = $message = $product_name = '';
     }
 }
 
 include 'header.php';
 ?>
 
-<section class="section container">
-    <p class="section-subtitle">Get in touch</p>
-    <h1 class="section-title">Book a Fitting</h1>
+<section class="section container" style="min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 3rem; padding-bottom: 3rem;">
+    <div style="width: 100%; max-width: 600px; text-align: center; margin-bottom: 2rem;">
+        <p class="section-subtitle">Get in touch</p>
+        <h1 class="section-title" style="margin-bottom: 1rem;">Contact Us</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 300; line-height: 1.6;">We would love to hear from you. Please fill out the form below to connect with our studio.</p>
+    </div>
 
-    <div class="consultation-layout" style="margin-top: var(--spacing-md);">
-        <!-- Side Details Panel -->
-        <div class="consultation-info">
-            <h2>Our Studio</h2>
-            <p>Step into our studio shop. Let us help you find the right fit and design for your special day.</p>
-            
-            <div class="info-item">
-                <i class="fas fa-gem"></i>
-                <div>
-                    <h4 style="color: var(--accent-gold); font-family: var(--font-sans); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.1em; margin-bottom: 0.2rem;">Bridal Fitting</h4>
-                    <p style="font-size: 0.85rem; color: #aaa;">Private fittings, styling, fabric selections, and measurement layouts.</p>
-                </div>
+    <!-- Centered Form Card -->
+    <div style="width: 100%; max-width: 600px; padding: 2.5rem; background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: var(--shadow-premium); border-radius: 8px;">
+        <?php if (!empty($errors)): ?>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const errMsg = <?php echo json_encode(implode("\n• ", $errors)); ?>;
+                    showCoutureAlert('Please Correct Errors', '• ' + errMsg);
+                });
+            </script>
+        <?php endif; ?>
+
+        <form action="contact.php" method="POST" autocomplete="off">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="name" style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 500;">Full Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" value="<?php echo htmlspecialchars($name); ?>" required>
             </div>
 
-            <div class="info-item">
-                <i class="fas fa-video"></i>
-                <div>
-                    <h4 style="color: var(--accent-gold); font-family: var(--font-sans); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.1em; margin-bottom: 0.2rem;">Video Call Fitting</h4>
-                    <p style="font-size: 0.85rem; color: #aaa;">For global clients, book a video-consultation with our lead stylists.</p>
-                </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="email" style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 500;">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="name@domain.com" value="<?php echo htmlspecialchars($email); ?>" required>
             </div>
 
-            <div class="info-item">
-                <i class="fas fa-clock"></i>
-                <div>
-                    <h4 style="color: var(--accent-gold); font-family: var(--font-sans); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.1em; margin-bottom: 0.2rem;">Opening Hours</h4>
-                    <p style="font-size: 0.85rem; color: #aaa;">Monday to Saturday: 10:00 AM - 7:00 PM<br>Sunday: By Prior Appointment Only</p>
-                </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="phone" style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 500;">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="+91 98765 43210" value="<?php echo htmlspecialchars($phone); ?>" required>
             </div>
-        </div>
 
-        <!-- Consultation Request Form -->
-        <div class="consultation-form-wrapper">
-            <?php if ($success): ?>
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        showCoutureAlert('Booking Success', 'Thank you! Your fitting request has been received. We will reach out to you within 24 hours to confirm your booking.');
-                    });
-                </script>
-            <?php endif; ?>
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label for="message" style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 500;">Your Message</label>
+                <textarea id="message" name="message" class="form-control" placeholder="Tell us how we can help you..."><?php echo htmlspecialchars($message); ?></textarea>
+            </div>
 
-            <?php if (!empty($errors)): ?>
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const errMsg = <?php echo json_encode(implode("\n• ", $errors)); ?>;
-                        showCoutureAlert('Please Correct Errors', '• ' + errMsg);
-                    });
-                </script>
-            <?php endif; ?>
-
-            <form action="contact.php" method="POST" autocomplete="off">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" value="<?php echo htmlspecialchars($name); ?>" required>
-                </div>
-
-                <div class="form-group form-grid-2">
-                    <div>
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="name@domain.com" value="<?php echo htmlspecialchars($email); ?>" required>
-                    </div>
-                    <div>
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="+91 98765 43210" value="<?php echo htmlspecialchars($phone); ?>" required>
-                    </div>
-                </div>
-
-                <div class="form-group form-grid-2">
-                    <div>
-                        <label for="type">Appointment Type</label>
-                        <select id="type" name="type" class="form-control">
-                            <option value="Studio Appointment" <?php echo ($type === 'Studio Appointment') ? 'selected' : ''; ?>>Visit Shop in Person</option>
-                            <option value="Virtual Video Call" <?php echo ($type === 'Virtual Video Call') ? 'selected' : ''; ?>>Video Call Meeting</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="date">Preferred Date</label>
-                        <input type="date" id="date" name="date" class="form-control" value="<?php echo htmlspecialchars($date); ?>" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="product_name">Product Name (Optional)</label>
-                    <input type="text" id="product_name" name="product_name" class="form-control" placeholder="e.g. The Gulnar Lehenga" value="<?php echo htmlspecialchars($product_name); ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="message">Your Requirements / Message</label>
-                    <textarea id="message" name="message" class="form-control" placeholder="Mention size specifications, occasion date, custom requirements, etc."><?php echo htmlspecialchars($message); ?></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-maroon btn-full" style="padding: 1.1rem; font-weight: 500;">Book Appointment</button>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-maroon btn-full">Send Message</button>
+        </form>
     </div>
 </section>
 
