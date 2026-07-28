@@ -167,15 +167,18 @@ a {
 }
 
 .btn-maroon {
-    background-color: var(--highlight-madder);
+    background: linear-gradient(135deg, #E5C060 0%, #B8860B 50%, #8A6200 100%);
     color: var(--bg-secondary);
-    border-color: var(--highlight-madder);
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.2);
 }
 
 .btn-maroon:hover {
-    background-color: #611E1F;
-    border-color: #611E1F;
+    background: linear-gradient(135deg, #F0D280 0%, #C8961B 50%, #9C7200 100%);
     color: var(--bg-secondary);
+    border-color: transparent;
+    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.35);
+    transform: translateY(-1px);
 }
 
 .btn-full {
