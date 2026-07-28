@@ -1,6 +1,8 @@
 <?php
 // Determine the current page for active nav states
 $current_page = basename($_SERVER['PHP_SELF']);
+require_once __DIR__ . '/data/db.php';
+require_once __DIR__ . '/data/products.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,13 +43,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         });
     <?php elseif ($current_page === 'product.php'): 
         $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-        $product_name = 'Unknown Product';
-        if (file_exists(__DIR__ . '/data/products.php')) {
-            include_once __DIR__ . '/data/products.php';
-            if (isset($products[$product_id])) {
-                $product_name = $products[$product_id]['name'];
-            }
-        }
+        $product_name = isset($products[$product_id]) ? $products[$product_id]['name'] : 'Unknown Product';
     ?>
         fbq('track', 'ViewContent', { 
             content_type: 'product',
@@ -73,7 +69,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </div>
             
 <?php
-require_once __DIR__ . '/data/db.php';
 $categories_list = db_get_categories();
 $parent_categories = [];
 $subcategories = [];
