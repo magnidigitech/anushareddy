@@ -27,8 +27,14 @@ $paragraphs = array_filter(array_map('trim', preg_split('/\n{2,}/', $story_text)
 <section class="section container">
     <div class="story-body">
         <?php if (!empty($paragraphs)): ?>
-            <?php foreach ($paragraphs as $para): ?>
-            <p><?php echo nl2br(htmlspecialchars($para)); ?></p>
+            <?php foreach ($paragraphs as $para): 
+                $para_html = htmlspecialchars($para);
+                // Parse bold: **text** -> <strong>text</strong>
+                $para_html = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $para_html);
+                // Parse list items: * item -> • item
+                $para_html = preg_replace('/^\*\s+/m', '• ', $para_html);
+            ?>
+            <p><?php echo nl2br($para_html); ?></p>
             <?php endforeach; ?>
         <?php else: ?>
             <p>Our story is coming soon. Check back later.</p>

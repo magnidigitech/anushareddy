@@ -97,7 +97,7 @@ include 'header.php';
 
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label for="email" style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 500;">Email Address</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="name@domain.com" value="<?php echo htmlspecialchars($email); ?>" required>
+                <input type="email" id="email" name="email" class="form-control" placeholder="mail@gmail.com" value="<?php echo htmlspecialchars($email); ?>" required>
             </div>
 
             <div class="form-group" style="margin-bottom: 1.5rem;">
