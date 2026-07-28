@@ -3,14 +3,49 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 require_once __DIR__ . '/data/db.php';
 require_once __DIR__ . '/data/products.php';
+
+// Default SEO Metadata
+$page_title = "Anusha Reddy Couture | Premium Bridal & Festive Wear";
+$page_desc = "Anusha Reddy Couture - Premium Bridal & Festive Wear. Handcrafted bespoke designer lehengas, wedding sarees, and luxury Indian garments in Hyderabad.";
+$page_keywords = "Anusha Reddy Couture, designer bridal wear, luxury lehenga, wedding sarees, custom fittings Hyderabad, Jubilee Hills boutique";
+
+// Page-specific SEO Metadata Overrides
+if ($current_page === 'contact.php') {
+    $page_title = "Book a Fitting | Anusha Reddy Couture";
+    $page_desc = "Schedule a private bridal fitting or virtual consultation at Anusha Reddy Couture in Jubilee Hills, Hyderabad. Customize your dream outfit.";
+    $page_keywords = "book designer fitting, bridal consultation, virtual styling, luxury custom clothing, Hyderabad boutique appointment";
+} elseif ($current_page === 'collections.php') {
+    $selected_category = isset($_GET['category']) ? trim($_GET['category']) : 'All';
+    $category_title = ($selected_category !== 'All') ? htmlspecialchars($selected_category) : 'All Collections';
+    $page_title = "Shop {$category_title} | Anusha Reddy Couture";
+    $page_desc = "Explore our premium {$category_title} collection. Handcrafted custom lehengas, luxury sarees, Anarkalis, and fusion wear.";
+    $page_keywords = "shop " . htmlspecialchars($selected_category) . ", designer clothing, custom lehengas online, luxury sarees shopping, bridal wear catalog";
+} elseif ($current_page === 'product.php') {
+    $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    if (isset($products[$product_id])) {
+        $product = $products[$product_id];
+        $page_title = "{$product['name']} | Anusha Reddy Couture";
+        $page_desc = "Discover {$product['name']}. " . strip_tags($product['description']);
+        $page_keywords = "{$product['name']}, {$product['category']}, custom bridal wear, bespoke couture, luxury Indian clothing";
+    }
+} elseif ($current_page === 'story.php') {
+    $page_title = "Our Story | Anusha Reddy Couture";
+    $page_desc = "Learn about the journey of Anusha Reddy Couture. From two sewing machines to a premier luxury boutique in Hyderabad celebrating Indian craftsmanship.";
+    $page_keywords = "Anusha Reddy Story, fashion designer journey, Indian craftsmanship, luxury bridal boutique, Hyderabad couture house history";
+} elseif ($current_page === 'thank-you.php') {
+    $page_title = "Thank You | Anusha Reddy Couture";
+    $page_desc = "Thank you for contacting Anusha Reddy Couture. We are redirecting you to complete your custom fitting details.";
+    $page_keywords = "thank you, booking submission, redirecting";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Anusha Reddy Couture - Premium Bridal & Festive Wear. Custom Clothing Designs.">
-    <title>Anusha Reddy Couture | Beautiful Dresses</title>
+    <meta name="description" content="<?php echo htmlspecialchars($page_desc); ?>">
+    <meta name="keywords" content="<?php echo htmlspecialchars($page_keywords); ?>">
+    <title><?php echo htmlspecialchars($page_title); ?></title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

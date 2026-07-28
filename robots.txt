@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.php
+Disallow: /thank-you.php
+
+Sitemap: https://anushareddy.com/sitemap.xml
