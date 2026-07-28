@@ -409,18 +409,24 @@ a {
         flex: 1;
         display: flex;
         justify-content: flex-start;
+        align-items: center;
+        align-self: center;
     }
 
     .logo {
         flex: 0 0 auto;
         display: flex;
         justify-content: center;
+        align-items: center;
+        align-self: center;
     }
 
     .header-actions {
         flex: 1;
         display: flex;
         justify-content: flex-end;
+        align-items: center;
+        align-self: center;
     }
 }
 

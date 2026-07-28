@@ -24,6 +24,15 @@ if ($selected_category !== 'All') {
 ?>
 
 <section class="section container-fluid">
+    <!-- Breadcrumb -->
+    <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--spacing-md); color: var(--text-muted);">
+        <a href="index.php">Home</a> &nbsp;/&nbsp; 
+        <a href="collections.php">Shop</a> 
+        <?php if ($selected_category !== 'All'): ?>
+            &nbsp;/&nbsp; <span style="color: var(--accent-gold);"><?php echo htmlspecialchars($selected_category); ?></span>
+        <?php endif; ?>
+    </p>
+
     <p class="section-subtitle">Our Catalog</p>
     <h1 class="section-title"><?php echo ($selected_category !== 'All') ? htmlspecialchars($selected_category) : 'Our Products'; ?></h1>
     
