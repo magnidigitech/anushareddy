@@ -79,9 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                          "*Inquired Design:* " . ($product_name ? $product_name : 'None') . "\n" .
                          "*Message:* " . ($message ? $message : 'None');
 
-        // Redirect to WhatsApp
+        // Redirect to Thank You page first to ensure Meta tracking triggers
         $whatsapp_url = "https://wa.me/917702137501?text=" . rawurlencode($whatsapp_text);
-        header("Location: " . $whatsapp_url);
+        header("Location: thank-you.php?whatsapp=" . urlencode($whatsapp_url));
         exit;
 
         $success = true;

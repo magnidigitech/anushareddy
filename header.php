@@ -34,7 +34,7 @@ require_once __DIR__ . '/data/products.php';
     fbq('track', 'PageView');
 
     // Page-specific Event Tracking
-    <?php if ($current_page === 'contact.php'): ?>
+    <?php if ($current_page === 'thank-you.php'): ?>
         fbq('track', 'Lead', { content_name: 'Book a Fitting' });
     <?php elseif ($current_page === 'collections.php'): ?>
         fbq('track', 'ViewContent', { 
@@ -53,6 +53,16 @@ require_once __DIR__ . '/data/products.php';
     <?php elseif ($current_page === 'story.php'): ?>
         fbq('track', 'ViewContent', { content_name: 'Our Story' });
     <?php endif; ?>
+
+    // Global WhatsApp click listener
+    document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('click', function(e) {
+            var target = e.target.closest('a');
+            if (target && target.href && target.href.indexOf('wa.me') !== -1) {
+                fbq('trackCustom', 'WhatsAppClick');
+            }
+        });
+    });
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1701135914496775&ev=PageView&noscript=1"
